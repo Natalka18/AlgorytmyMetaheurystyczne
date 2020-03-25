@@ -9,7 +9,7 @@ public class Main {
         double step = 0.000000001;
         MinimizationProblem function = MinimizationProblemFactory.getMinimizationProblem(b);
         if(b == 1) {  // funkcja G
-            start = new double[]{0.1, 0.1, 0.1, 0.1};
+            start = new double[]{0.1, 0.1, 0.1, 0};
         } else {  // funkcja H
             start = new double[]{1,1,1,1.1};
         }

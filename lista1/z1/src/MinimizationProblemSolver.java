@@ -1,10 +1,11 @@
-import java.util.Arrays;
+import java.util.Random;
 
 class MinimizationProblemSolver {
     private long maxTime;  // w milisekundach
     private double step;
     private double[] startingPoint;
     private MinimizationProblem function;
+    private long startTime;
 
     MinimizationProblemSolver(long max_time, MinimizationProblem function,
                               double step, double[] start) {
@@ -21,7 +22,7 @@ class MinimizationProblemSolver {
         System.arraycopy(startingPoint, 0, currentPoint, 0, startingPoint.length);
         double[] currentMinPoint = new double[startingPoint.length];
         System.arraycopy(currentPoint, 0, currentMinPoint, 0, startingPoint.length);
-        long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
 
             double currentMinValue = function.functionValue(startingPoint);
             while(System.currentTimeMillis() - startTime < maxTime) {
@@ -37,11 +38,13 @@ class MinimizationProblemSolver {
                 }
 
                 if(zeroGradient) {
-                    return currentMinPoint;
+                    //return currentMinPoint;
+                    currentPoint = generateStartingPoint();
                 }
 
                 if(!function.inDomain(currentPoint) || !function.inDerivativeDomain(currentPoint)) {
-                    return currentMinPoint;
+                    //return currentMinPoint;
+                    currentPoint = generateStartingPoint();
                 }
 
                 double currentFunctionValue = function.functionValue(currentPoint);
@@ -52,5 +55,30 @@ class MinimizationProblemSolver {
                 }
             }
             return currentMinPoint;
+    }
+
+    // generuje losowo nowy punkt startowy
+    private double[] generateStartingPoint() {
+        int length = startingPoint.length;
+        double[] newPoint = new double[length];
+        do {
+            for(int i = 0; i < length; i++) {
+                newPoint[i] = randomDouble();
+            }
+        } while ((!function.inDomain(newPoint) ||
+                !function.inDerivativeDomain(newPoint)) &&
+                System.currentTimeMillis() - startTime < maxTime);
+        return newPoint;
+    }
+
+    // generuje losową liczbę rzeczywistą
+    private double randomDouble() {
+        // losowanie znaku
+        Random random = new Random();
+        int sign = (random.nextBoolean()) ? -1 : 1;
+        // losowanie liczby rzeczywistej z przedziały [0,1),
+        // a następnie mnożenie jej przez losową liczbę całkowitą
+        // z przedziału [0,10}
+        return sign * (random.nextDouble() * random.nextInt(10));
     }
 }
