@@ -28,17 +28,38 @@ public class Main {
         System.out.println(graph.getCostOfPath(path));
 
         History h = new History(4, 4, 5);
-        List<Integer[]> list = h.getNonTabooPairs();
-        System.out.println("test historii");
-        for(Integer[] pair : list) {
-            System.out.println(pair[0] + " " + pair[1]);
-        }
+//        List<Integer[]> list = h.getNonTabooPairs();
+//        System.out.println("test historii");
+//        for(Integer[] pair : list) {
+//            System.out.println(pair[0] + " " + pair[1]);
+//        }
+//        System.out.println("_______________________________________________________");
+//        h.markAsTaboo(4,0);
+//        list = h.getNonTabooPairs();
+//        for(Integer[] pair : list) {
+//            System.out.println(pair[0] + " " + pair[1]);
+//        }
         System.out.println("_______________________________________________________");
-        h.markAsTaboo(4,0);
-        list = h.getNonTabooPairs();
-        for(Integer[] pair : list) {
-            System.out.println(pair[0] + " " + pair[1]);
-        }
+        System.out.println("Frequency");
+        h.printFrequency();
+        System.out.println("Waiting period");
+        h.printWaitingPeriod();
+
+        h.markAsTaboo(1,0);
+        h.incrementFrequencyForPair(4,2);
+        System.out.println("Frequency");
+        h.printFrequency();
+        System.out.println("Waiting period");
+        h.printWaitingPeriod();
+
+        h.endOfIteration();
+        h.endOfIteration();
+        h.endOfIteration();
+        h.endOfIteration();
+        System.out.println("Frequency");
+        h.printFrequency();
+        System.out.println("Waiting period");
+        h.printWaitingPeriod();
 
         // przed wypisaniem odpowiedzi trzeba dodać jedynkę do numerów wierzchołków
     }

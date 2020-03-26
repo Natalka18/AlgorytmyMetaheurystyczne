@@ -9,11 +9,13 @@ class History {
     // Map<Node2, waitingPeriod>, indeks w liście jest równy Node1
     private List<Map<Integer, Integer>> waitingPeriods;
     private List<Map<Integer, Integer>> frequency;
+    private int iterationNumber;
 
     History(int termForWaitingPeriod, int termForFrequency,
             int numberOfVertices) {
         this.WAITING_PERIOD = termForWaitingPeriod;
         this.TERM_FOR_FREQUENCY = termForFrequency;
+        iterationNumber = 0;
         initializeLists(numberOfVertices);
     }
 
@@ -33,7 +35,44 @@ class History {
         return result;
     }
 
-    void resetFrequency() {
+    void incrementFrequencyForPair(int node1, int node2) {
+        Map<Integer, Integer> map = frequency.get(node1);
+        if(map.containsKey(node2)) {
+            int f = map.get(node2);
+            f++;
+            map.put(node2, f);
+        } else {
+            map = frequency.get(node2);
+            if(map.containsKey(node1)) {
+                int f = map.get(node1);
+                f++;
+                map.put(node1, f);
+            }
+        }
+    }
+
+    void markAsTaboo(int node1, int node2) {
+        Map<Integer, Integer> map = waitingPeriods.get(node1);
+        if(map.containsKey(node2)) {
+            map.put(node2, WAITING_PERIOD);
+        } else {
+            map = waitingPeriods.get(node2);
+            if(map.containsKey(node1)) {
+                map.put(node1, WAITING_PERIOD);
+            }
+        }
+    }
+
+    void endOfIteration() {
+        iterationNumber++;
+        if(iterationNumber > TERM_FOR_FREQUENCY) {
+            iterationNumber = 0;
+            resetFrequency();
+        }
+        decrementWaitingElements();
+    }
+
+    private void resetFrequency() {
         for(Map<Integer, Integer> map : frequency) {
             for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
                 int key = entry.getKey();
@@ -42,7 +81,7 @@ class History {
         }
     }
 
-    void decrementWaitingElements() {
+    private void decrementWaitingElements() {
         for (Map<Integer, Integer> map : waitingPeriods) {
             for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
                 int node2 = entry.getKey();
@@ -52,31 +91,6 @@ class History {
                     map.put(node2, waitingPeriod);
                 }
             }
-        }
-    }
-
-    void incrementFrequencyForPair(int node1, int node2) {
-        Map<Integer, Integer> map = frequency.get(node1);
-        if(!map.containsKey(node2)) {
-            map = frequency.get(node2);
-            Integer frequency = map.get(node1);
-            frequency++;
-            map.put(node1, frequency);
-        } else {
-            Integer frequency = map.get(node2);
-            frequency++;
-            map.put(node2, frequency);
-        }
-    }
-
-    void markAsTaboo(int node1, int node2) {
-        Map<Integer, Integer> map = waitingPeriods.get(node1);
-        if(!map.containsKey(node2)) {
-            map = waitingPeriods.get(node2);
-            map.put(node1, WAITING_PERIOD);
-        } else {
-            Integer period = map.get(node2);
-            map.put(node1, WAITING_PERIOD);
         }
     }
 
@@ -91,6 +105,31 @@ class History {
             for(int j = i + 1; j < n; j++) {
                 mapWaitingPeriod.put(j, 0);
                 mapFrequency.put(j, 0);
+            }
+        }
+    }
+
+
+    // do testów
+    void printFrequency() {
+        for(int node1 = 0; node1 < frequency.size(); node1++) {
+            Map<Integer, Integer> map = frequency.get(node1);
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                int node2 = entry.getKey();
+                int f = entry.getValue();
+                System.out.println(node1 + " " + node2 + " " + f);
+            }
+        }
+    }
+
+    // do testów
+    void printWaitingPeriod() {
+        for(int node1 = 0; node1 < waitingPeriods.size(); node1++) {
+            Map<Integer, Integer> map = waitingPeriods.get(node1);
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                int node2 = entry.getKey();
+                int f = entry.getValue();
+                System.out.println(node1 + " " + node2 + " " + f);
             }
         }
     }
