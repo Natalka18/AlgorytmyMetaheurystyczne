@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,6 +27,7 @@ public class Main {
         System.out.println(graph.getCostOfEdge(2,2));
         int[] path = {0, 4, 3, 2, 1};
         System.out.println(graph.getCostOfPath(path));
+        System.out.println(graph.getNewCostOfPath(path, graph.getCostOfPath(path), 1, 0));
 
         History h = new History(4, 4, 5);
 //        List<Integer[]> list = h.getNonTabooPairs();
@@ -61,6 +63,11 @@ public class Main {
         System.out.println("Waiting period");
         h.printWaitingPeriod();
 
+        System.out.println("________________________________________________________");
+        Solver s = new Solver(graph, 4, 4, 0.4);
+        //System.out.println(Arrays.toString(s.randomPath()));
+        //int[] t = {3,0,2,1,4};
+        //System.out.println(Arrays.toString(s.swapNodes(t, 3, 4)));
         // przed wypisaniem odpowiedzi trzeba dodać jedynkę do numerów wierzchołków
     }
 }
