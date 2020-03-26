@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Random;
 
 class Solver {
@@ -5,15 +6,86 @@ class Solver {
     private History history;
     // współczynnik z przedziału (0,1) określający, jak istotna jest częstotliwość zamiany
     private double epsilon;
-    private int[] currentShortestPath;
-    private int currentMinimum;
+    int[] currentShortestPath;
+    int currentMinimum;
+    private long maxTime;  // w milisekundach
 
     Solver(CompleteGraph graph, int termForWaitingPeriod,
-           int termForFrequency, double epsilon) {
+           int termForFrequency, double epsilon, long maxTime) {
         this.graph = graph;
         this.epsilon = epsilon;
+        this.maxTime = maxTime;
         history = new History(termForWaitingPeriod,
                 termForFrequency, graph.getNumberOfVertices());
+    }
+
+    void solve() {
+        long startTime = System.currentTimeMillis();
+        int numberOfVertices = graph.getNumberOfVertices();
+        currentShortestPath = randomPath();
+        currentMinimum = graph.getCostOfPath(currentShortestPath);
+        boolean aspiration = false;
+        int[] currentPath = new int[numberOfVertices];
+        System.arraycopy(currentShortestPath, 0, currentPath, 0, numberOfVertices);
+
+        while(System.currentTimeMillis() - startTime < maxTime) {
+            List<Integer[]> tabooPairs = history.getTabooPairs();
+            int currentCost;
+            if(!tabooPairs.isEmpty()) {
+                aspiration = false; // czy zastosowano kryterium aspiracji
+                Integer[] bestTabooPair = tabooPairs.get(0);
+                for (Integer[] pair : tabooPairs) {
+                    int costAfterChange = graph.getNewCostOfPath(currentPath,
+                            pair[0], pair[1]);
+                    // kryterium aspiracji
+                    if (costAfterChange < currentMinimum) {
+                        currentMinimum = costAfterChange;
+                        bestTabooPair = pair;
+                        aspiration = true;
+                    }
+                }
+
+                if(aspiration) {
+                    swapNodes(currentPath, bestTabooPair[0], bestTabooPair[1]);
+                    System.arraycopy(currentPath, 0, currentShortestPath,
+                            0, numberOfVertices);
+                    history.markAsTaboo(bestTabooPair[0], bestTabooPair[1]);
+                    history.incrementFrequencyForPair(bestTabooPair[0], bestTabooPair[1]);
+                }
+            }
+             if(!aspiration) {  // wybór najlepszej zamiany, która nie jest zakazana
+                 List<Integer[]> nonTabooPairs = history.getNonTabooPairs();
+                 if (!nonTabooPairs.isEmpty()) {
+                     Integer[] bestPair = nonTabooPairs.get(0);
+                     int frequency = history.getFrequencyOfPair(bestPair[0], bestPair[1]);
+                     // wartość funkcji oceny z zamianą bestPair pogorszona o współczynnik
+                     // związany z częstotliwością zamiany tej pary
+                     double bestEval = graph.getNewCostOfPath(currentPath,
+                             bestPair[0], bestPair[1]) + epsilon * frequency;
+                     double eval = bestEval;
+                     for (Integer[] pair : nonTabooPairs) {
+                         frequency = history.getFrequencyOfPair(pair[0], pair[1]);
+                         eval = graph.getNewCostOfPath(currentPath,
+                                 pair[0], pair[1]) + epsilon * frequency;
+                         if (eval < bestEval) {
+                             bestEval = eval;
+                             bestPair = pair;
+                         }
+                     }
+
+                     swapNodes(currentPath, bestPair[0], bestPair[1]);
+                     history.markAsTaboo(bestPair[0], bestPair[1]);
+                     history.incrementFrequencyForPair(bestPair[0], bestPair[1]);
+                 }
+             }
+             currentCost = graph.getCostOfPath(currentPath);
+             if (currentCost < currentMinimum) {
+                 currentMinimum = currentCost;
+                 System.arraycopy(currentPath, 0, currentShortestPath, 0, numberOfVertices);
+             }
+
+            history.endOfIteration();
+        }
     }
 
     private int[] randomPath() {
@@ -32,7 +104,7 @@ class Solver {
         return path;
     }
 
-    private int[] swapNodes(int[] path, int node1, int node2) {
+    private void swapNodes(int[] path, int node1, int node2) {
         int index1 = 0;
         int index2 = 0;
         for(int i = 0; i < path.length; i++) {
@@ -46,6 +118,5 @@ class Solver {
         int temp = path[index1];
         path[index1] = path[index2];
         path[index2] = temp;
-        return path;
     }
 }

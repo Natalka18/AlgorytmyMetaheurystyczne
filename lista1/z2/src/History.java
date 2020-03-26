@@ -35,6 +35,35 @@ class History {
         return result;
     }
 
+    List<Integer[]> getTabooPairs() {
+        List<Integer[]> result = new ArrayList<>();
+        for (int node1 = 0; node1 < waitingPeriods.size(); node1++) {
+            Map<Integer, Integer> map = waitingPeriods.get(node1);
+            for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                int node2 = entry.getKey();
+                int waitingPeriod = entry.getValue();
+                if(waitingPeriod != 0) {
+                    Integer[] pair = {node1, node2};
+                    result.add(pair);
+                }
+            }
+        }
+        return result;
+    }
+
+    int getFrequencyOfPair(int node1, int node2) {
+        Map<Integer, Integer> map = frequency.get(node1);
+        if(map.containsKey(node2)) {
+            return map.get(node2);
+        } else {
+            map = frequency.get(node2);
+            if(map.containsKey(node1)) {
+                return map.get(node1);
+            }
+        }
+        return 0;
+    }
+
     void incrementFrequencyForPair(int node1, int node2) {
         Map<Integer, Integer> map = frequency.get(node1);
         if(map.containsKey(node2)) {
@@ -105,31 +134,6 @@ class History {
             for(int j = i + 1; j < n; j++) {
                 mapWaitingPeriod.put(j, 0);
                 mapFrequency.put(j, 0);
-            }
-        }
-    }
-
-
-    // do testów
-    void printFrequency() {
-        for(int node1 = 0; node1 < frequency.size(); node1++) {
-            Map<Integer, Integer> map = frequency.get(node1);
-            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-                int node2 = entry.getKey();
-                int f = entry.getValue();
-                System.out.println(node1 + " " + node2 + " " + f);
-            }
-        }
-    }
-
-    // do testów
-    void printWaitingPeriod() {
-        for(int node1 = 0; node1 < waitingPeriods.size(); node1++) {
-            Map<Integer, Integer> map = waitingPeriods.get(node1);
-            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-                int node2 = entry.getKey();
-                int f = entry.getValue();
-                System.out.println(node1 + " " + node2 + " " + f);
             }
         }
     }

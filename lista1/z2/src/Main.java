@@ -22,52 +22,13 @@ public class Main {
             }
         }
 
-        graph.print();
-        System.out.println(graph.getCostOfEdge(3,4));
-        System.out.println(graph.getCostOfEdge(2,2));
-        int[] path = {0, 4, 3, 2, 1};
-        System.out.println(graph.getCostOfPath(path));
-        System.out.println(graph.getNewCostOfPath(path, graph.getCostOfPath(path), 1, 0));
-
-        History h = new History(4, 4, 5);
-//        List<Integer[]> list = h.getNonTabooPairs();
-//        System.out.println("test historii");
-//        for(Integer[] pair : list) {
-//            System.out.println(pair[0] + " " + pair[1]);
-//        }
-//        System.out.println("_______________________________________________________");
-//        h.markAsTaboo(4,0);
-//        list = h.getNonTabooPairs();
-//        for(Integer[] pair : list) {
-//            System.out.println(pair[0] + " " + pair[1]);
-//        }
-        System.out.println("_______________________________________________________");
-        System.out.println("Frequency");
-        h.printFrequency();
-        System.out.println("Waiting period");
-        h.printWaitingPeriod();
-
-        h.markAsTaboo(1,0);
-        h.incrementFrequencyForPair(4,2);
-        System.out.println("Frequency");
-        h.printFrequency();
-        System.out.println("Waiting period");
-        h.printWaitingPeriod();
-
-        h.endOfIteration();
-        h.endOfIteration();
-        h.endOfIteration();
-        h.endOfIteration();
-        System.out.println("Frequency");
-        h.printFrequency();
-        System.out.println("Waiting period");
-        h.printWaitingPeriod();
-
-        System.out.println("________________________________________________________");
-        Solver s = new Solver(graph, 4, 4, 0.4);
-        //System.out.println(Arrays.toString(s.randomPath()));
-        //int[] t = {3,0,2,1,4};
-        //System.out.println(Arrays.toString(s.swapNodes(t, 3, 4)));
-        // przed wypisaniem odpowiedzi trzeba dodać jedynkę do numerów wierzchołków
+        Solver s = new Solver(graph, 10, 10, 0.4, 1000 * maxTime);
+        s.solve();
+        System.out.println(s.currentMinimum);
+        int[] path = s.currentShortestPath;
+        for(int i = 0; i < numberOfNodes; i++) {
+            path[i]++;
+            System.out.print(path[i] + " ");
+        }
     }
 }
