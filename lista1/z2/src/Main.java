@@ -1,5 +1,3 @@
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -22,7 +20,7 @@ public class Main {
             }
         }
 
-        Solver s = new Solver(graph, 10, 10, 0.4, 1000 * maxTime);
+        Solver s = new Solver(graph, numberOfNodes / 3, numberOfNodes, 0.4, 1000 * maxTime);
         s.solve();
         System.out.println(s.currentMinimum);
         int[] path = s.currentShortestPath;
