@@ -28,5 +28,6 @@ public class Main {
             path[i]++;
             System.out.print(path[i] + " ");
         }
+        System.out.print(path[0]);
     }
 }
