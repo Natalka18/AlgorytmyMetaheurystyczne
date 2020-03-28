@@ -4,8 +4,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int maxTime = scanner.nextInt() * 1000;
-        long startTime = System.currentTimeMillis();
         int b = scanner.nextInt();
+        long startTime = System.currentTimeMillis();
         double[] start;
         double step = 0.000000001;
         MinimizationProblem function = MinimizationProblemFactory.getMinimizationProblem(b);
