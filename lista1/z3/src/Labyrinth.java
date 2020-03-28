@@ -23,7 +23,7 @@ class Labyrinth {
     }
 
     // zwraca indeks kroku, w którym agent dochodzi już do celu.
-    // Jeśli w tej sekwencji kroków agent nie dojdzie do celu, zwracana jest -1
+    // Jeśli w tej sekwencji kroków agent nie dojdzie do celu, zwracana jest długość ciągu
     int checkSequence(List<Character> sequence) {
         int currentPositionRow = agentRow;
         int currentPositionColumn = agentColumn;
@@ -40,14 +40,26 @@ class Labyrinth {
             }
             if(currentPositionRow >= numberOfRows ||
                     currentPositionColumn >= numberOfColumns) {
-                return -1;
+                return sequence.size();
             } else if(labyrinth[currentPositionRow][currentPositionColumn] == WALL) {
-                return -1;
+                return sequence.size();
             } else if(labyrinth[currentPositionRow][currentPositionColumn] == AIM) {
                 return i;
             }
         }
-        return -1;
+        return sequence.size();
+    }
+
+    int getAgentRow() {
+        return agentRow;
+    }
+
+    int getAgentColumn() {
+        return agentColumn;
+    }
+
+    int getField(int row, int column) {
+        return labyrinth[row][column];
     }
 
     private void setAgentCoordinates() {
