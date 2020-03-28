@@ -4,6 +4,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int maxTime = scanner.nextInt() * 1000;
+        long startTime = System.currentTimeMillis();
         int b = scanner.nextInt();
         double[] start;
         double step = 0.000000001;
@@ -13,7 +14,8 @@ public class Main {
         } else {  // funkcja H
             start = new double[]{1,1,1,1.1};
         }
-        MinimizationProblemSolver solver = new MinimizationProblemSolver(maxTime, function, step, start);
+        MinimizationProblemSolver solver = new MinimizationProblemSolver(maxTime, function, step,
+                start, startTime);
         double[] solution = solver.solve();
         double minValue = function.functionValue(solution);
         for (double v : solution) {

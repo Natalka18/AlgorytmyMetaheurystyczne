@@ -8,11 +8,12 @@ class MinimizationProblemSolver {
     private long startTime;
 
     MinimizationProblemSolver(long max_time, MinimizationProblem function,
-                              double step, double[] start) {
+                              double step, double[] start, long startTime) {
         this.maxTime = max_time;
         this.function = function;
         this.startingPoint = start;
         this.step = step;
+        this.startTime = startTime;
     }
 
     // zwraca punkt, w którym znajduje się znalezione minimum
@@ -22,7 +23,6 @@ class MinimizationProblemSolver {
         System.arraycopy(startingPoint, 0, currentPoint, 0, startingPoint.length);
         double[] currentMinPoint = new double[startingPoint.length];
         System.arraycopy(currentPoint, 0, currentMinPoint, 0, startingPoint.length);
-        startTime = System.currentTimeMillis();
 
             double currentMinValue = function.functionValue(startingPoint);
             while(System.currentTimeMillis() - startTime < maxTime) {
