@@ -20,7 +20,10 @@ public class Main {
             }
         }
 
-        Solver s = new Solver(graph, numberOfNodes / 3, numberOfNodes, 0.4, 1000 * maxTime);
+        long startTime = System.currentTimeMillis();
+
+        Solver s = new Solver(graph, numberOfNodes / 3, numberOfNodes,
+                0.4, 1000 * maxTime, startTime);
         s.solve();
         System.out.println(s.currentMinimum);
         int[] path = s.currentShortestPath;

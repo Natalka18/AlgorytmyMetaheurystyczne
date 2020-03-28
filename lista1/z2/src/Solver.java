@@ -9,18 +9,19 @@ class Solver {
     int[] currentShortestPath;
     int currentMinimum;
     private long maxTime;  // w milisekundach
+    private long startTime;
 
     Solver(CompleteGraph graph, int termForWaitingPeriod,
-           int termForFrequency, double epsilon, long maxTime) {
+           int termForFrequency, double epsilon, long maxTime, long startTime) {
         this.graph = graph;
         this.epsilon = epsilon;
         this.maxTime = maxTime;
         history = new History(termForWaitingPeriod,
                 termForFrequency, graph.getNumberOfVertices());
+        this.startTime = startTime;
     }
 
     void solve() {
-        long startTime = System.currentTimeMillis();
         int numberOfVertices = graph.getNumberOfVertices();
         currentShortestPath = randomPath();
         currentMinimum = graph.getCostOfPath(currentShortestPath);
