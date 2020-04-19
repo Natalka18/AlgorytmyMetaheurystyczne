@@ -5,23 +5,33 @@ public abstract class ProblemAbstract<T> implements Problem<T> {
     private double maxTemperature;
     private double currentTemperature;
     private int numberOfTestedNeighbours;
+    private Solution<T> startingSolution;
 
     ProblemAbstract(double minTemperature, double maxTemperature,
-                    int numberOfTestedNeighbours) {
+                    int numberOfTestedNeighbours, Solution<T> startingSolution) {
         this.minTemperature = minTemperature;
         this.maxTemperature = maxTemperature;
         this.numberOfTestedNeighbours = numberOfTestedNeighbours;
+        this.startingSolution = startingSolution;
     }
 
     public void solve(long startTime, long maxTime) {
         currentTemperature = maxTemperature;
         int iteration = 0;
-        Solution<T> currentSolution = randomSolution();
-        currentBestSolution = currentSolution.clone();
+        Solution<T> currentSolution;
+        if(startingSolution.isNull()) {
+            currentSolution = randomSolution();
+        } else {
+            currentSolution = startingSolution;
+        }
+        currentBestSolution = currentSolution.copy();
         currentBestEval = currentBestSolution.evaluate();
         while(System.currentTimeMillis() - startTime < maxTime) {
             for(int i = 0; i < numberOfTestedNeighbours; i++) {
                 Solution<T> newSolution = currentSolution.nextNeighbour();
+                if(newSolution == null) {
+                    break;
+                }
                 currentSolution = compareSolutions(currentSolution, newSolution);
             }
             currentBestSolution = getBetterSolution(currentSolution, currentBestSolution);
@@ -29,6 +39,7 @@ public abstract class ProblemAbstract<T> implements Problem<T> {
             iteration++;
             updateTemperature(iteration);
         }
+        //currentBestSolution = processTheSolution(currentBestSolution);
     }
 
     @Override
