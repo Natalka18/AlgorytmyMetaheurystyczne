@@ -12,7 +12,7 @@ public interface Problem<T> {
     // przy tej samej temperaturze
     int getNumberOfTestedNeighbours();
     // oblicza nową wartość temperatury na podstawie numeru iteracji
-    void updateTemperature(int iteration);
+    void updateTemperature(int iteration, long maxTime);
     // szuka rozwiązania problemu dopóki spełniony jest warunek
     // now - startTime < maxTime. MaxTime w milisekundach
     void solve(long startTime, long maxTime);

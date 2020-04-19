@@ -29,7 +29,7 @@ public abstract class ProblemAbstract<T> implements Problem<T> {
         while(System.currentTimeMillis() - startTime < maxTime) {
             for(int i = 0; i < numberOfTestedNeighbours; i++) {
                 Solution<T> newSolution = currentSolution.nextNeighbour();
-                if(newSolution == null) {
+                if(newSolution == null) {  // skończyli się sąsiedzi
                     break;
                 }
                 currentSolution = compareSolutions(currentSolution, newSolution);
@@ -37,9 +37,12 @@ public abstract class ProblemAbstract<T> implements Problem<T> {
             currentBestSolution = getBetterSolution(currentSolution, currentBestSolution);
             currentBestEval = currentBestSolution.evaluate();
             iteration++;
-            updateTemperature(iteration);
+            updateTemperature(iteration, maxTime);
+            if(currentTemperature < minTemperature) {
+                currentTemperature = maxTemperature;
+                currentSolution = randomSolution();
+            }
         }
-        //currentBestSolution = processTheSolution(currentBestSolution);
     }
 
     @Override

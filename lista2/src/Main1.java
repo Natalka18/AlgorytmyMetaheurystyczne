@@ -5,9 +5,9 @@ import java.util.Scanner;
 public class Main1 {
     public static void main(String[] args) {
         // ustalenie parametrów
-        double minTemperature = 0;
-        double maxTemperature = 100;
-        int testedNeighbours = 10;  // ilośc testowanych sąsiadów bez zmiany temperatury
+        double minTemperature = 1;
+        double maxTemperature = 30;
+        int testedNeighbours = 10;  // ilość testowanych sąsiadów bez zmiany temperatury
 
         // wczytanie  danych
         Scanner scanner = new Scanner(System.in);
