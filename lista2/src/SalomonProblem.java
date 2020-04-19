@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Random;
 
 public class SalomonProblem extends ProblemAbstract<List<Double>> {
 
@@ -16,12 +17,25 @@ public class SalomonProblem extends ProblemAbstract<List<Double>> {
     @Override
     public Solution<List<Double>> compareSolutions(Solution<List<Double>> oldSolution,
                                                    Solution<List<Double>> newSolution) {
-        return null;
+        double e = Math.E;
+        double newEval = newSolution.evaluate();
+        double oldEval = oldSolution.evaluate();
+        if(newEval < oldEval) {
+            return newSolution;
+        }
+        // prawdopodobieństwo przejścia do newSolution
+        double probability = Math.pow(e, (oldEval - newEval) / getCurrentTemperature());
+        Random random = new Random();
+        if(random.nextInt(1) < probability) {
+            return newSolution;
+        }
+        return oldSolution;
     }
 
     @Override
     public void updateTemperature(int iteration) {
-
+        double r = 10;
+        super.currentTemperature = getMaxTemperature() * Math.pow(Math.E, -iteration * r);
     }
 
     @Override
@@ -32,6 +46,9 @@ public class SalomonProblem extends ProblemAbstract<List<Double>> {
     @Override
     public Solution<List<Double>> getBetterSolution(Solution<List<Double>> solution1,
                                                     Solution<List<Double>> solution2) {
-        return null;
+        if(solution1.evaluate() < solution2.evaluate()) {
+            return solution1;
+        }
+        return solution2;
     }
 }

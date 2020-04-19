@@ -3,7 +3,7 @@ public abstract class ProblemAbstract<T> implements Problem<T> {
     private double currentBestEval;  // wartość funkcji oceny obecnie najlepszego rozwiązania
     private double minTemperature;
     private double maxTemperature;
-    private double currentTemperature;
+    double currentTemperature;
     private int numberOfTestedNeighbours;
     private Solution<T> startingSolution;
 
