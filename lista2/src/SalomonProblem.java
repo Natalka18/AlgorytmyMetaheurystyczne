@@ -40,7 +40,7 @@ public class SalomonProblem extends ProblemAbstract<List<Double>> {
 
     @Override
     public void updateTemperature(int iteration, long maxTime) {
-        // str. 153: r w pracy Spearsa było odwrotnością liczby prób.
+        // str. 153: r w pracy Spearsa było odwrotnością liczby prób (pomnożonej przez liczbę zmiennych).
         // W tym programie w ciągu sekundy wykonuje się 80000 prób.
         double r = 1.0 / (80000 * maxTime);
         super.currentTemperature = getMaxTemperature() * Math.exp(-iteration * r);
