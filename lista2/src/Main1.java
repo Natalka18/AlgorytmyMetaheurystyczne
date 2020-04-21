@@ -6,7 +6,7 @@ public class Main1 {
     public static void main(String[] args) {
         // ustalenie parametrów
         double minTemperature = 1;
-        double maxTemperature = 30;
+        double maxTemperature = 30000;
         int testedNeighbours = 10;  // ilość testowanych sąsiadów bez zmiany temperatury
 
         // wczytanie  danych

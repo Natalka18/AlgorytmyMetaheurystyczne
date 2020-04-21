@@ -8,14 +8,15 @@ public class MatrixProblem extends ProblemAbstract<Integer[][]> {
     private int numberOfColumns;
     private int blockSize;
 
+    // rowsInBlock - liczba wierszy w bloku w macierzy startowej
     MatrixProblem(double minTemperature, double maxTemperature,
                   int numberOfTestedNeighbours, Integer[][] startingMatrix,
                   int numberOfRows, int numberOfColumns, int blockSize,
-                  Integer[][] targetMatrix) {
+                  Integer[][] targetMatrix, int rowsInBlock, int columnsInBlock) {
         super(minTemperature, maxTemperature,
                 numberOfTestedNeighbours,
                 new MatrixSolution(startingMatrix, numberOfRows,
-                        numberOfColumns, targetMatrix));
+                        numberOfColumns, targetMatrix, rowsInBlock, columnsInBlock));
         this.blockSize = blockSize;
         this.numberOfColumns = numberOfColumns;
         this.numberOfRows = numberOfRows;
@@ -53,29 +54,45 @@ public class MatrixProblem extends ProblemAbstract<Integer[][]> {
             }
         }
         return new MatrixSolution(randomSolution, numberOfRows,
-                numberOfColumns, targetMatrix);
+                numberOfColumns, targetMatrix, a, b);
     }
 
     @Override
     public Solution<Integer[][]> compareSolutions(Solution<Integer[][]> oldSolution,
                                                   Solution<Integer[][]> newSolution) {
-        return null;
+        double e = Math.E;
+        double newEval = newSolution.evaluate();
+        double oldEval = oldSolution.evaluate();
+        if(newEval < oldEval) {
+            return newSolution.copy();
+        }
+        // prawdopodobieństwo przejścia do newSolution
+        double probability = Math.pow(e, (oldEval - newEval) / getCurrentTemperature());
+        Random random = new Random();
+        if(random.nextInt(1) < probability) {
+            return newSolution.copy();
+        }
+        return oldSolution.copy();
     }
 
     @Override
     public void updateTemperature(int iteration, long maxTime) {
-
+        double r = 0.95;
+        super.currentTemperature *= r;
     }
 
     @Override
     public Solution<Integer[][]> processTheSolution(Solution<Integer[][]> currentSolution) {
-        return null;
+        return currentSolution;
     }
 
     @Override
     public Solution<Integer[][]> getBetterSolution(Solution<Integer[][]> solution1,
                                                    Solution<Integer[][]> solution2) {
-        return null;
+        if(solution1.evaluate() < solution2.evaluate()) {
+            return solution1;
+        }
+        return solution2;
     }
 
     // zwraca dzielniki liczby number większe lub równe blockSize
