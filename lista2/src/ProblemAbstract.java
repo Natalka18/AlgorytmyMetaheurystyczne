@@ -36,12 +36,10 @@ public abstract class ProblemAbstract<T> implements Problem<T> {
             }
             currentBestSolution = getBetterSolution(currentSolution, currentBestSolution);
             currentBestEval = currentBestSolution.evaluate();
-            System.out.println(currentBestEval);
             iteration++;
             updateTemperature(iteration, maxTime);
             if(currentTemperature < minTemperature) {
                 currentTemperature = maxTemperature;
-                System.out.println("losowanie");
                 currentSolution = randomSolution();
             }
         }
