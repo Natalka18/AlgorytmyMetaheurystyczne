@@ -2,8 +2,8 @@ import java.util.List;
 
 class Labyrinth {
     private int[][] labyrinth;
-    private int numberOfRows;
-    private int numberOfColumns;
+    int numberOfRows;
+    int numberOfColumns;
     private int agentRow;
     private int agentColumn;
     static int WALL = 1;
@@ -45,7 +45,6 @@ class Labyrinth {
             } else if(labyrinth[currentPositionRow][currentPositionColumn] == WALL) {
                 return sequence.size();
             } else if(labyrinth[currentPositionRow][currentPositionColumn] == AIM) {
-                //sequence = sequence.subList(0, i + 1);
                 // usunięcie niepotrzebnego fragmentu sekwencji
                 while(sequence.size() > i + 1) {
                     sequence.remove(sequence.size() - 1);
@@ -54,6 +53,24 @@ class Labyrinth {
             }
         }
         return sequence.size();
+    }
+
+    // zwraca true, jeśli udało się zrobić krok, false jeśli nie
+    boolean makeStep(char direction) {
+        if(direction == UP && getField(agentRow - 1, agentColumn) != WALL) {
+            agentRow--;
+            return true;
+        } else if(direction == DOWN && getField(agentRow + 1, agentColumn) != WALL) {
+            agentRow++;
+            return true;
+        } else if(direction == RIGHT && getField(agentRow, agentColumn + 1) != WALL) {
+            agentColumn++;
+            return true;
+        } else if(direction == LEFT && getField(agentRow, agentColumn - 1) != WALL) {
+            agentColumn--;
+            return true;
+        }
+        return false;
     }
 
     int getAgentRow() {
@@ -68,7 +85,7 @@ class Labyrinth {
         return labyrinth[row][column];
     }
 
-    private void setAgentCoordinates() {
+    void setAgentCoordinates() {
         for(int i = 0; i < numberOfRows; i++) {
             for (int j = 0; j < numberOfColumns; j++) {
                 if(labyrinth[i][j] == AGENT) {
