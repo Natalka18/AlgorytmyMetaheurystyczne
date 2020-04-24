@@ -55,18 +55,23 @@ class Labyrinth {
         return sequence.size();
     }
 
-    // zwraca true, jeśli udało się zrobić krok, false jeśli nie
+    // zwraca true, jeśli udało się zrobić krok, false jeśli nie.
+    // Krok można zrobić, jeśli pole jest różne od WALL i różne od AIM.
     boolean makeStep(char direction) {
-        if(direction == UP && getField(agentRow - 1, agentColumn) != WALL) {
+        if(direction == UP && getField(agentRow - 1, agentColumn) != WALL &&
+                getField(agentRow - 1, agentColumn) != AIM) {
             agentRow--;
             return true;
-        } else if(direction == DOWN && getField(agentRow + 1, agentColumn) != WALL) {
+        } else if(direction == DOWN && getField(agentRow + 1, agentColumn) != WALL &&
+                getField(agentRow + 1, agentColumn) != AIM) {
             agentRow++;
             return true;
-        } else if(direction == RIGHT && getField(agentRow, agentColumn + 1) != WALL) {
+        } else if(direction == RIGHT && getField(agentRow, agentColumn + 1) != WALL &&
+                getField(agentRow, agentColumn + 1) != AIM) {
             agentColumn++;
             return true;
-        } else if(direction == LEFT && getField(agentRow, agentColumn - 1) != WALL) {
+        } else if(direction == LEFT && getField(agentRow, agentColumn - 1) != WALL
+                && getField(agentRow, agentColumn - 1) != AIM) {
             agentColumn--;
             return true;
         }

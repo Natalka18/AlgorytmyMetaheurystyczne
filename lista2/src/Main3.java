@@ -26,43 +26,8 @@ public class Main3 {
 
         problem.solve(startTime, maxTime);
         Solution solution = problem.getCurrentBestSolution();
-        System.out.println(solution.toString());
-
-        // testy metody checkSequence
-//        Labyrinth labyrinth = new Labyrinth(numberOfRows, numberOfColumns, array);
-//        List<Character> list = new ArrayList<>();
-//        list.add('L');
-//        list.add('U');
-//        list.add('L');
-//        list.add('L');
-//        list.add('U');
-//        list.add('L');
-//        System.out.println(labyrinth.checkSequence(list));
-//        System.out.println(list.toString());
-
-        // testy metody initializeNeighboursList
-//        List<Character> list2 = new ArrayList<>();
-//        list2.add('L');
-//        list2.add('U');
-//        list2.add('R');
-//        list2.add('D');
-//        Solution s = new LabyrinthSolution(list2, array, numberOfRows, numberOfColumns);
-//        System.out.println(s.toString());
-//        Solution n = s.nextNeighbour();
-//        System.out.println(n.toString());
-//        n = s.nextNeighbour();
-//        System.out.println(n.toString());
-//        n = s.nextNeighbour();
-//        System.out.println(n.toString());
-//        n = s.nextNeighbour();
-//        System.out.println(n.toString());
-//        n = s.nextNeighbour();
-//        System.out.println(n.toString());
-//        n = s.nextNeighbour();
-//        System.out.println(n.toString());
-
-        // test losowania ciagu
-//        Solution result = problem.randomSolution();
-//        System.out.println(result.toString());
+        String solutionString = solution.toString();
+        System.err.println(solutionString);
+        System.out.println(solutionString.length());
     }
 }

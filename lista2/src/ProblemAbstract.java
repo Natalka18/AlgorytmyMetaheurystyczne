@@ -21,6 +21,7 @@ public abstract class ProblemAbstract<T> implements Problem<T> {
         Solution<T> currentSolution;
         if(startingSolution.isNull()) {
             currentSolution = randomSolution();
+            //System.out.println("losowanie początkowego rozwiązania");
         } else {
             currentSolution = startingSolution;
         }
@@ -35,13 +36,11 @@ public abstract class ProblemAbstract<T> implements Problem<T> {
                 currentSolution = compareSolutions(currentSolution, newSolution);
             }
             currentBestSolution = getBetterSolution(currentSolution, currentBestSolution);
-            System.out.println(currentBestSolution.toString());
             currentBestEval = currentBestSolution.evaluate();
             iteration++;
             updateTemperature(iteration, maxTime);
             if(currentTemperature < minTemperature) {
                 currentTemperature = maxTemperature;
-                System.out.println("losowanie");
                 currentSolution = randomSolution();
             }
         }

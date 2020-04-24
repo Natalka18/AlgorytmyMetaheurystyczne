@@ -16,26 +16,12 @@ public class LabyrinthProblem extends ProblemAbstract<List<Character>> {
 
     @Override
     public Solution<List<Character>> randomSolution() {
-        // TODO ulepszyć randomSolution
-        // najprostsza wersja - losujemy ciąg kroków o długości n*m
-        /*
-        int sequenceLength = labyrinth.numberOfColumns * labyrinth.numberOfRows;
-        char[] characters = {Labyrinth.UP, Labyrinth.DOWN, Labyrinth.LEFT, Labyrinth.RIGHT};
-        List<Character> sequence;
-        do {
-            sequence = randomSequence(sequenceLength, characters);
-        } while(labyrinth.checkSequence(sequence) == sequenceLength);
-        // losowanie ciągu dopóki nie uzyskamy ciągu, który wyprowadza z labiryntu
-        return new LabyrinthSolution(sequence, labyrinth);
-        */
-
         // wersja druga - z chodzeniem wzdłuż ścian i losowaniem kroku,
         // gdy obok nie ma ścian
         List<Character> sequence = new ArrayList<>();
         // znak oznaczający, że nie znaleziono kierunku, w którym należy pójść
         char directionNotFound = 'n';
-        char directionToExit = checkDirection(Labyrinth.AIM, directionNotFound);
-        while(directionToExit == directionNotFound) {
+        while(checkDirection(Labyrinth.AIM, directionNotFound) == directionNotFound) {
             // jeśli zbyt długo chodzimy, to szukamy ciągu kroków od początku
             if(sequence.size() >= labyrinth.numberOfRows * labyrinth.numberOfColumns) {
                 labyrinth.setAgentCoordinates();
@@ -47,13 +33,14 @@ public class LabyrinthProblem extends ProblemAbstract<List<Character>> {
                 // idziemy przy ścianie, sprawdzając, czy nie ma w niej wyjścia
                 if(goAlongTheWall(directionToWall, sequence)) {
                     // znaleziono wyjście na tej ścianie
-                    directionToExit = directionToWall;
+                    break;
                 }
-            } else {
+            } else if(checkDirection(Labyrinth.AIM, directionNotFound) == directionNotFound) {
                 makeRandomStep(sequence);
-                directionToExit = checkDirection(Labyrinth.AIM, directionNotFound);
             }
         }
+
+        char directionToExit = checkDirection(Labyrinth.AIM, directionNotFound);
         sequence.add(directionToExit);
         labyrinth.setAgentCoordinates();
         return new LabyrinthSolution(sequence, labyrinth);
@@ -79,8 +66,7 @@ public class LabyrinthProblem extends ProblemAbstract<List<Character>> {
 
     @Override
     public void updateTemperature(int iteration, long maxTime) {
-        // TODO ulepszyć updateTemperature
-        double r = 0.7;
+        double r = 0.8;
         super.currentTemperature *= r;
     }
 
@@ -98,25 +84,35 @@ public class LabyrinthProblem extends ProblemAbstract<List<Character>> {
         return solution2;
     }
 
-    // zwraca, w którym kierunku od położenia agenta znajduje się pole field.
+    // zwraca, w którym kierunku od położenia agenta znajduje się pole field
+    // i losuje jeden z tych kierunków.
+    // dzięki temu, gdy ściana jest w więcej niż jednym polu obok agenta,
+    // wybierzemy losową ścianę, wzdłuż której pójdziemy.
     // Jeśli nie ma field obok agenta, zwracany jest znak c.
     private char checkDirection(int field, char c) {
         int row = labyrinth.getAgentRow();
         int column = labyrinth.getAgentColumn();
-
+        List<Character> directions = new ArrayList<>();
         if(labyrinth.getField(row - 1, column) == field) {
-            return Labyrinth.UP;
+            directions.add(Labyrinth.UP);
         }
         if(labyrinth.getField(row + 1, column) == field) {
-            return Labyrinth.DOWN;
+            directions.add(Labyrinth.DOWN);
         }
         if(labyrinth.getField(row, column + 1) == field) {
-            return Labyrinth.RIGHT;
+            directions.add(Labyrinth.RIGHT);
         }
         if(labyrinth.getField(row, column - 1) == field) {
-            return Labyrinth.LEFT;
+            directions.add(Labyrinth.LEFT);
         }
-        return c;
+
+        if(directions.isEmpty()) {
+            return c;
+        }
+
+        Random random = new Random();
+        int index = random.nextInt(directions.size());
+        return directions.get(index);
     }
 
     // metoda zakłada, że wokół agenta nie ma ścian, więc może iść w każdym kierunku.
@@ -130,7 +126,15 @@ public class LabyrinthProblem extends ProblemAbstract<List<Character>> {
         availableSteps.add(Labyrinth.UP);
         availableSteps.add(Labyrinth.RIGHT);
         availableSteps.add(Labyrinth.LEFT);
-        //availableSteps.remove(new Character(previousStep));
+        if(previousStep == Labyrinth.UP) {
+            availableSteps.remove(new Character(Labyrinth.DOWN));
+        } else if(previousStep == Labyrinth.DOWN) {
+            availableSteps.remove(new Character(Labyrinth.UP));
+        } else if(previousStep == Labyrinth.RIGHT) {
+            availableSteps.remove(new Character(Labyrinth.LEFT));
+        } else if(previousStep == Labyrinth.LEFT) {
+            availableSteps.remove(new Character(Labyrinth.RIGHT));
+        }
         Random random = new Random();
         int index = random.nextInt(availableSteps.size());
         char step = availableSteps.get(index);
@@ -147,40 +151,28 @@ public class LabyrinthProblem extends ProblemAbstract<List<Character>> {
             // losowanie, czy idziemy wzdłuż ściany w lewo, czy w prawo
             char step = (random.nextBoolean() ? Labyrinth.LEFT : Labyrinth.RIGHT);
             // pętlę wykonujemy, dopóki na górze (na dole) widzimy ścianę
-            do {
+            while(checkDirection(Labyrinth.WALL, 'n') == direction) {
                 // jeśli się da, agent robi krok, jeśli nie - przerywamy pętlę
                 if(!labyrinth.makeStep(step)) {
                     break;
                 } else {
                     sequence.add(step);
                 }
-            } while(checkDirection(Labyrinth.WALL, 'n') == direction);
+            }
         } else if(direction == Labyrinth.RIGHT || direction == Labyrinth.LEFT) {
             // losowanie, czy idziemy wzdłuż ściany w górę, czy w dół
             char step = (random.nextBoolean() ? Labyrinth.UP : Labyrinth.DOWN);
             // pętlę wykonujemy, dopóki na prawo (na lewo) widzimy ścianę
-            do {
+            while(checkDirection(Labyrinth.WALL, 'n') == direction) {
                 // jeśli się da, agent robi krok, jeśli nie - przerywamy pętlę
                 if(!labyrinth.makeStep(step)) {
                     break;
                 } else {
                     sequence.add(step);
                 }
-            } while(checkDirection(Labyrinth.WALL, 'n') == direction);
+            }
         }
 
         return checkDirection(Labyrinth.AIM, 'n') != 'n';
-    }
-
-    // zwraca losowy ciąg o długości length składający się ze znaków z tablicy characters
-    private List<Character> randomSequence(int length, char[] characters) {
-        List<Character> result = new ArrayList<>();
-        Random random = new Random();
-        for(int i = 0; i < length; i++) {
-            // losujemy znak z tablicy characters
-            int index = random.nextInt(characters.length);
-            result.add(characters[index]);
-        }
-        return result;
     }
 }
