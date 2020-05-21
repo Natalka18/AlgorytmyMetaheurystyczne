@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        int populationSize = 50;
+        int populationSize = 100;
         double mutationProbability = 0.4;
 
         Scanner scanner = new Scanner(System.in);

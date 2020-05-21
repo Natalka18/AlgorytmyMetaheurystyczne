@@ -24,7 +24,6 @@ class Population {
 
     void start(long startTime, int maxTime) {
         while(System.currentTimeMillis() - startTime < maxTime) {
-            System.out.println(this.toString());
             recombination();
             evaluateSolutions();
             select2();
@@ -95,7 +94,7 @@ class Population {
                         break;
                     }
                 }
-                newPopulation.add(this.solutions.get(j).clone());
+                newPopulation.add(this.solutions.get(j).copy());
             }
 
             this.solutions = newPopulation;
@@ -122,7 +121,7 @@ class Population {
                 }
             }
             // dodajemy je do nowej populacji
-            newPopulation.add(best.clone());
+            newPopulation.add(best.copy());
         }
         this.solutions = newPopulation;
     }

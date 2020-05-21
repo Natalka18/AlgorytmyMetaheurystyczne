@@ -13,6 +13,12 @@ class Dictionary {
     }
 
     boolean contains(String word) {
-        return this.words.contains(word);
+        for (String s :
+                this.words) {
+            if(s.equalsIgnoreCase(word)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

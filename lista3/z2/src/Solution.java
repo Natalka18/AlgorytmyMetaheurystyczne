@@ -62,37 +62,6 @@ class Solution {
                 newWord.setCharAt(index2, letter1);
                 this.word = newWord.toString();
         }
-
-
-
-
-        // losujemy sposób mutacji
-//        int mutation = random.nextInt(3);
-//        if(mutation == 0 && numberOfAvailableLetters > 0) {  // dodanie litery
-//            int letterIndex = random.nextInt(numberOfAvailableLetters);
-//            int offset = random.nextInt(wordLength + 1);
-//            StringBuilder builder = new StringBuilder(this.word);
-//            builder.insert(offset, availableLetters.get(letterIndex));
-//            this.word = builder.toString();
-//        } else {
-//            if (mutation == 1 && numberOfAvailableLetters > 0) {  // wymiana litery
-//                int letterIndex = random.nextInt(numberOfAvailableLetters);
-//                int index = random.nextInt(wordLength);
-//                StringBuilder builder = new StringBuilder(this.word);
-//                builder.replace(index, index + 1,
-//                        String.valueOf(availableLetters.get(letterIndex)));
-//                this.word = builder.toString();
-//            } else {  // transpozycja
-//                int index1 = random.nextInt(wordLength);
-//                int index2 = random.nextInt(wordLength);
-//                StringBuilder newWord = new StringBuilder(this.word);
-//                char letter1 = this.word.charAt(index1);
-//                char letter2 = this.word.charAt(index2);
-//                newWord.setCharAt(index1, letter2);
-//                newWord.setCharAt(index2, letter1);
-//                this.word = newWord.toString();
-//            }
-//        }
     }
 
     void setEvaluation(int evaluation) {
@@ -125,7 +94,7 @@ class Solution {
         return word + " " + evaluation;
     }
 
-    public Solution clone() {
+    Solution copy() {
         return new Solution(this.word, this.alphabet);
     }
 }
