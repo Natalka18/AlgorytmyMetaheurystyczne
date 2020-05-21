@@ -24,10 +24,11 @@ class Population {
 
     void start(long startTime, int maxTime) {
         while(System.currentTimeMillis() - startTime < maxTime) {
-            recombination();  // nowe osobniki są porównywane z aktualnie najlepszym rozwiązaniem
+            System.out.println(this.toString());
+            recombination();
             evaluateSolutions();
-            select1();
-            mutate();  // osobnik po mutacji jest porównywany z aktualnie najlepszym rozwiązaniem
+            select2();
+            mutate();
         }
     }
 
@@ -59,7 +60,14 @@ class Population {
     }
 
     String getBestSolution() {
-        return bestSolution;
+        // szukamy najlepszego osobnika w obecnej populacji,
+        // porównując każdego z nich z najlepszym rozwiązaniem
+        // wybranym z pierwszego pokolenia
+        for (Solution solution :
+                this.solutions) {
+            this.bestSolution = betterSolution(this.bestSolution, solution.getWord());
+        }
+        return this.bestSolution;
     }
 
     // ruletka
@@ -158,8 +166,6 @@ class Population {
 
         String word1 = prefix1 + suffix2;
         String word2 = prefix2 + suffix1;
-        this.bestSolution = betterSolution(this.bestSolution, word1);
-        this.bestSolution = betterSolution(this.bestSolution, word2);
         Solution child1 = new Solution(word1, this.alphabet);
         Solution child2 = new Solution(word2, this.alphabet);
         this.solutions.add(child1);
@@ -170,7 +176,6 @@ class Population {
         for (Solution solution :
                 this.solutions) {
             String newWord = solution.mutateWithProbability(this.mutationProbability);
-            this.bestSolution = betterSolution(this.bestSolution, newWord);
         }
     }
 

@@ -5,7 +5,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         int populationSize = 50;
-        double mutationProbability = 0.7;
+        double mutationProbability = 0.4;
 
         Scanner scanner = new Scanner(System.in);
         int maxTime = scanner.nextInt() * 1000;  // w milisekundach

@@ -34,8 +34,6 @@ class Solution {
         }
         int numberOfAvailableLetters = availableLetters.size();
 
-
-
         if(numberOfAvailableLetters > 0) {
             // dodajemy literę w losowym miejscu lub zamieniamy losową literę na inną
             int mutation = random.nextInt(2);
