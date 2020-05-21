@@ -7,12 +7,12 @@ public class Main {
         int b = scanner.nextInt();
         long startTime = System.currentTimeMillis();
         double[] start;
-        double step = 0.000000001;
+        double step = 0.5;
         MinimizationProblem function = MinimizationProblemFactory.getMinimizationProblem(b);
         if(b == 1) {  // funkcja G
-            start = new double[]{0.1, 0.1, 0.1, 0};
+            start = new double[]{2, 2, 2, 2};
         } else {  // funkcja H
-            start = new double[]{1,1,1,1.1};
+            start = new double[]{2, 2, 2, 2};
         }
         MinimizationProblemSolver solver = new MinimizationProblemSolver(maxTime, function, step,
                 start, startTime);
