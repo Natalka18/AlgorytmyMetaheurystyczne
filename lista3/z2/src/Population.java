@@ -25,6 +25,7 @@ class Population {
     void start(long startTime, int maxTime) {
         while(System.currentTimeMillis() - startTime < maxTime) {
             recombination();
+            evaluateSolutions();
             select3();
             mutate();
         }
