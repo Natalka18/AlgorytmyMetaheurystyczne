@@ -36,14 +36,29 @@ class Solution {
 
         if(numberOfAvailableLetters > 0) {
             // dodajemy literę w losowym miejscu lub zamieniamy losową literę na inną
-            int mutation = random.nextInt(2);
-            if(mutation == 0) {  // dodanie litery
-                int letterIndex = random.nextInt(numberOfAvailableLetters);
+            int mutation = random.nextInt(10);
+            if(mutation < 7) {  // dodanie litery (70%)
                 int offset = random.nextInt(wordLength + 1);
                 StringBuilder builder = new StringBuilder(this.word);
-                builder.insert(offset, availableLetters.get(letterIndex));
+                // dostawiamy jedną literę z prawdopodobieństwem 0.7,
+                // dwie z prawdopodobieństwem 0.3
+                double r = random.nextDouble();
+                if(r < 0.3 && numberOfAvailableLetters > 1) {
+                    // dwie litery
+                    int letterIndex1 = random.nextInt(numberOfAvailableLetters);
+                    int letterIndex2 = random.nextInt(numberOfAvailableLetters);
+                    char[] s = {availableLetters.get(letterIndex1),
+                            availableLetters.get(letterIndex2)};
+                    builder.insert(offset, s);
+                } else {
+                    // jedna litera
+                    int letterIndex = random.nextInt(numberOfAvailableLetters);
+                    builder.insert(offset, availableLetters.get(letterIndex));
+                }
+
                 this.word = builder.toString();
-            } else {  // wymiana litery
+
+            } else {  // wymiana litery (30%)
                 int letterIndex = random.nextInt(numberOfAvailableLetters);
                 int index = random.nextInt(wordLength);
                 StringBuilder builder = new StringBuilder(this.word);
@@ -85,6 +100,9 @@ class Solution {
         return this.word.substring(0, index);
     }
 
+    String getInfix(int index1, int index2) {
+        return this.word.substring(index1, index2);
+    }
     // zwraca część słowa this.word od index do końca
     String getSuffix(int index) {
         return this.word.substring(index);

@@ -25,8 +25,7 @@ class Population {
     void start(long startTime, int maxTime) {
         while(System.currentTimeMillis() - startTime < maxTime) {
             recombination();
-            evaluateSolutions();
-            select2();
+            select3();
             mutate();
         }
     }
@@ -69,6 +68,25 @@ class Population {
         return this.bestSolution;
     }
 
+    private void select3() {
+        List<Solution> nextPopulation = new ArrayList<>();
+        String best = getBestSolution();
+        Solution solution = new Solution(best, this.alphabet);
+        nextPopulation.add(solution);
+        Random random = new Random();
+        for (int i = 0; i < this.size - 1; i++) {
+            int currentSize = this.solutions.size();
+            int index = random.nextInt(currentSize);
+            Solution s = this.solutions.get(index);
+            if(s.getEvaluation() >= 0) {
+                nextPopulation.add(s.copy());
+            } else {  // słowa nie da się ułożyć z danych liter
+                this.solutions.remove(index);
+            }
+        }
+        this.solutions = nextPopulation;
+    }
+
     // ruletka
     private void select1() {
         // tworzymy listę sum częściowych ocen wszystkich osobników
@@ -95,6 +113,7 @@ class Population {
                     }
                 }
                 newPopulation.add(this.solutions.get(j).copy());
+
             }
 
             this.solutions = newPopulation;
@@ -102,7 +121,7 @@ class Population {
 
     // turniej
     private void select2() {
-        int n = 5;  // liczba osobników w jednej grupie
+        int n = 3;  // liczba osobników w jednej grupie
         List<Solution> newPopulation = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < this.size; i++) {
